@@ -324,59 +324,42 @@ let lastScannedData = null;
 
 function openScannerModal() {
     openModal('modal-scanner');
-    document.getElementById('scanner-result').style.display = 'none';
+    document.getElementById('scanner-result').style.display  = 'none';
+    document.getElementById('scanner-processing').style.display = 'none';
     document.getElementById('manual-barcode').value = '';
-
-    setTimeout(() => {
-        html5QrCode = new Html5Qrcode("scanner-preview");
-
-        const config = {
-            fps: 15,
-            // Wide rectangular box - EAN-13 barcode साठी योग्य
-            qrbox: { width: 300, height: 100 },
-            // सर्व types चे barcodes support करणे
-            formatsToSupport: [
-                Html5QrcodeSupportedFormats.EAN_13,
-                Html5QrcodeSupportedFormats.EAN_8,
-                Html5QrcodeSupportedFormats.CODE_128,
-                Html5QrcodeSupportedFormats.CODE_39,
-                Html5QrcodeSupportedFormats.UPC_A,
-                Html5QrcodeSupportedFormats.UPC_E,
-                Html5QrcodeSupportedFormats.QR_CODE,
-            ],
-            experimentalFeatures: { useBarCodeDetectorIfSupported: true },
-            aspectRatio: 1.5
-        };
-
-        html5QrCode.start(
-            { facingMode: "environment" },
-            config,
-            (decodedText) => {
-                lookupBarcode(decodedText);
-                // Stop scanning after first successful scan
-                if (html5QrCode && html5QrCode.isScanning) {
-                    html5QrCode.stop().catch(() => {});
-                }
-            },
-            () => {} // Ignore per-frame scan errors
-        ).catch((err) => {
-            console.warn("Camera error:", err);
-            document.getElementById('scanner-preview').innerHTML =
-                `<div style="text-align:center;padding:30px;color:#94a3b8;">
-                    <i class="fa-solid fa-camera-slash" style="font-size:36px;margin-bottom:10px;display:block;"></i>
-                    <p style="font-weight:600;color:#475569;">Camera access failed.</p>
-                    <p style="font-size:12px;margin-top:4px;">Camera permission द्या किंवा खाली manually barcode enter करा.</p>
-                </div>`;
-        });
-    }, 300);
+    // Initialize html5QrCode instance once
+    if (!html5QrCode) {
+        html5QrCode = new Html5Qrcode("qr-hidden-canvas");
+    }
 }
 
-function stopScanner() {
-    if (html5QrCode && html5QrCode.isScanning) {
-        html5QrCode.stop().catch(() => {});
-    }
-    html5QrCode = null;
-    closeModal('modal-scanner');
+// Handle camera capture input
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('camera-input').addEventListener('change', handleImageFile);
+    document.getElementById('image-upload-input').addEventListener('change', handleImageFile);
+});
+
+function handleImageFile(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    document.getElementById('scanner-result').style.display  = 'none';
+    document.getElementById('scanner-processing').style.display = 'flex';
+
+    if (!html5QrCode) html5QrCode = new Html5Qrcode("qr-hidden-canvas");
+
+    html5QrCode.scanFile(file, true)
+        .then(decodedText => {
+            document.getElementById('scanner-processing').style.display = 'none';
+            lookupBarcode(decodedText);
+        })
+        .catch(() => {
+            document.getElementById('scanner-processing').style.display = 'none';
+            showToastError('Barcode detect झाला नाही! चांगल्या light मध्ये clear photo काढा.');
+        });
+
+    // Reset input so same file can be selected again
+    event.target.value = '';
 }
 
 function lookupBarcode(barcode) {
@@ -394,21 +377,21 @@ function lookupBarcode(barcode) {
     document.getElementById('result-barcode').textContent = `Barcode: ${barcode}`;
     document.getElementById('scanner-result').style.display = 'flex';
 
-    if (!found) {
-        document.getElementById('result-icon').innerHTML = '<i class="fa-solid fa-circle-question" style="color:#ea580c"></i>';
-    }
+    document.getElementById('result-icon').innerHTML = found
+        ? '<i class="fa-solid fa-circle-check"></i>'
+        : '<i class="fa-solid fa-circle-question" style="color:#ea580c"></i>';
 }
 
 function useScannedResult() {
     if (!lastScannedData) return;
-    // Pre-fill the stock add form
     document.getElementById('s-name').value     = lastScannedData.name;
     document.getElementById('s-category').value = lastScannedData.category;
     document.getElementById('s-unit').value      = lastScannedData.unit;
-    stopScanner();
+    closeModal('modal-scanner');
     openModal('modal-stock');
     showToast(`"${lastScannedData.name}" form मध्ये भरले!`);
 }
+
 
 function showToastError(msg) {
     const toast = document.getElementById('toast');
