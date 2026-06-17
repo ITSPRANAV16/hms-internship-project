@@ -329,9 +329,28 @@ function openScannerModal() {
 
     setTimeout(() => {
         html5QrCode = new Html5Qrcode("scanner-preview");
+
+        const config = {
+            fps: 15,
+            // Wide rectangular box - EAN-13 barcode साठी योग्य
+            qrbox: { width: 300, height: 100 },
+            // सर्व types चे barcodes support करणे
+            formatsToSupport: [
+                Html5QrcodeSupportedFormats.EAN_13,
+                Html5QrcodeSupportedFormats.EAN_8,
+                Html5QrcodeSupportedFormats.CODE_128,
+                Html5QrcodeSupportedFormats.CODE_39,
+                Html5QrcodeSupportedFormats.UPC_A,
+                Html5QrcodeSupportedFormats.UPC_E,
+                Html5QrcodeSupportedFormats.QR_CODE,
+            ],
+            experimentalFeatures: { useBarCodeDetectorIfSupported: true },
+            aspectRatio: 1.5
+        };
+
         html5QrCode.start(
             { facingMode: "environment" },
-            { fps: 10, qrbox: { width: 250, height: 120 } },
+            config,
             (decodedText) => {
                 lookupBarcode(decodedText);
                 // Stop scanning after first successful scan
@@ -339,14 +358,14 @@ function openScannerModal() {
                     html5QrCode.stop().catch(() => {});
                 }
             },
-            () => {} // Ignore scan errors
+            () => {} // Ignore per-frame scan errors
         ).catch((err) => {
             console.warn("Camera error:", err);
             document.getElementById('scanner-preview').innerHTML =
                 `<div style="text-align:center;padding:30px;color:#94a3b8;">
-                    <i class="fa-solid fa-camera-slash" style="font-size:36px;margin-bottom:10px;"></i>
-                    <p>Camera access failed.</p>
-                    <p style="font-size:12px;">Please use manual barcode entry below.</p>
+                    <i class="fa-solid fa-camera-slash" style="font-size:36px;margin-bottom:10px;display:block;"></i>
+                    <p style="font-weight:600;color:#475569;">Camera access failed.</p>
+                    <p style="font-size:12px;margin-top:4px;">Camera permission द्या किंवा खाली manually barcode enter करा.</p>
                 </div>`;
         });
     }, 300);
