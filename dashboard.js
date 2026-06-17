@@ -302,3 +302,106 @@ renderWaste(wasteData);
 renderStock(stockData);
 renderStaff(staffData);
 renderOverviewAlerts();
+
+// ---- MODAL HELPERS ----
+
+function openModal(id) {
+    document.getElementById(id).classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal(id) {
+    document.getElementById(id).classList.remove('open');
+    document.body.style.overflow = '';
+}
+
+function closeOnOverlay(event, id) {
+    if (event.target === event.currentTarget) closeModal(id);
+}
+
+function showToast(msg) {
+    const toast = document.getElementById('toast');
+    document.getElementById('toast-msg').textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+// ---- FORM SUBMISSIONS ----
+
+// Add Patient
+document.getElementById('form-patient').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const today = new Date().toISOString().split('T')[0];
+    patientsData.unshift({
+        name:   document.getElementById('p-name').value,
+        age:    parseInt(document.getElementById('p-age').value),
+        ward:   document.getElementById('p-ward').value,
+        bed:    document.getElementById('p-bed').value,
+        date:   document.getElementById('p-date').value || today,
+        doctor: document.getElementById('p-doctor').value,
+        status: document.getElementById('p-status').value,
+    });
+    renderPatients(patientsData);
+    closeModal('modal-patient');
+    this.reset();
+    showToast('Patient added successfully!');
+});
+
+// Add Waste Entry
+document.getElementById('form-waste').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const today = new Date().toISOString().split('T')[0];
+    wasteData.unshift({
+        date:   document.getElementById('w-date').value || today,
+        type:   document.getElementById('w-type').value,
+        dept:   document.getElementById('w-dept').value,
+        weight: parseFloat(document.getElementById('w-weight').value),
+        status: document.getElementById('w-status').value,
+    });
+    renderWaste(wasteData);
+    closeModal('modal-waste');
+    this.reset();
+    showToast('Waste entry added!');
+});
+
+// Add Stock Item
+document.getElementById('form-stock').addEventListener('submit', function(e) {
+    e.preventDefault();
+    stockData.unshift({
+        name:     document.getElementById('s-name').value,
+        category: document.getElementById('s-category').value,
+        qty:      parseInt(document.getElementById('s-qty').value),
+        min:      parseInt(document.getElementById('s-min').value),
+        unit:     document.getElementById('s-unit').value,
+    });
+    renderStock(stockData);
+    renderOverviewAlerts();
+    closeModal('modal-stock');
+    this.reset();
+    showToast('Stock item added!');
+});
+
+// Add Staff Member
+document.getElementById('form-staff').addEventListener('submit', function(e) {
+    e.preventDefault();
+    staffData.unshift({
+        name:    document.getElementById('st-name').value,
+        role:    document.getElementById('st-role').value,
+        dept:    document.getElementById('st-dept').value,
+        shift:   document.getElementById('st-shift').value,
+        contact: document.getElementById('st-contact').value,
+        status:  document.getElementById('st-status').value,
+    });
+    renderStaff(staffData);
+    closeModal('modal-staff');
+    this.reset();
+    showToast('Staff member added!');
+});
+
+// Close modal on ESC key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        ['modal-patient', 'modal-waste', 'modal-stock', 'modal-staff'].forEach(closeModal);
+        document.body.style.overflow = '';
+    }
+});
