@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Barcode Scanner Library -->
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 </head>
 <body>
 
@@ -304,6 +306,7 @@
                                 <option value="Lab Supplies">Lab Supplies</option>
                             </select>
                             <button class="btn-add" onclick="openModal('modal-stock')"><i class="fa-solid fa-plus"></i> Add Item</button>
+                            <button class="btn-scan" onclick="openScannerModal()"><i class="fa-solid fa-barcode"></i> Scan Barcode</button>
                         </div>
                     </div>
                     <div class="table-wrapper">
@@ -606,6 +609,39 @@
                     <button type="submit" class="btn-save"><i class="fa-solid fa-check"></i> Save Staff</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- ===== MODAL: BARCODE SCANNER ===== -->
+    <div class="modal-overlay" id="modal-scanner" onclick="closeOnOverlay(event, 'modal-scanner')">
+        <div class="modal-box scanner-modal-box">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-barcode"></i> Scan Medicine Barcode</h3>
+                <button class="modal-close" onclick="stopScanner();">&times;</button>
+            </div>
+            <div class="scanner-body">
+                <p class="scanner-tip"><i class="fa-solid fa-circle-info"></i> Camera च्या समोर medicine चा barcode धरा. आपोआप scan होईल.</p>
+                <div id="scanner-preview"></div>
+                <div class="scanner-result" id="scanner-result" style="display:none;">
+                    <div class="result-icon"><i class="fa-solid fa-circle-check"></i></div>
+                    <div class="result-info">
+                        <p id="result-name">Medicine Name</p>
+                        <span id="result-barcode">Barcode: —</span>
+                    </div>
+                    <button class="btn-save" id="btn-use-result" onclick="useScannedResult()">
+                        <i class="fa-solid fa-arrow-right"></i> Use This
+                    </button>
+                </div>
+                <div class="scanner-manual">
+                    <span>किंवा manually barcode enter करा:</span>
+                    <div class="manual-row">
+                        <input type="text" id="manual-barcode" placeholder="e.g. 8901030827737" class="search-input">
+                        <button class="btn-add" onclick="lookupBarcode(document.getElementById('manual-barcode').value)">
+                            <i class="fa-solid fa-magnifying-glass"></i> Lookup
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

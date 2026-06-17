@@ -735,8 +735,127 @@ body {
     opacity: 1;
 }
 
+/* ===== SCAN BUTTON ===== */
+.btn-scan {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 16px;
+    background: linear-gradient(135deg, #16a34a, #15803d);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.btn-scan:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(22,163,74,0.35);
+}
+
+/* ===== SCANNER MODAL ===== */
+.scanner-modal-box { max-width: 480px; }
+
+.scanner-body { padding: 20px 24px 24px; }
+
+.scanner-tip {
+    font-size: 13px;
+    color: var(--text-muted);
+    background: var(--primary-light);
+    color: var(--primary);
+    padding: 10px 14px;
+    border-radius: 10px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+}
+
+#scanner-preview {
+    width: 100%;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #0f172a;
+    min-height: 200px;
+    margin-bottom: 16px;
+    border: 2px solid var(--border);
+    position: relative;
+}
+
+#scanner-preview video {
+    width: 100% !important;
+    border-radius: 12px;
+}
+
+/* Hide default html5-qrcode UI extras */
+#scanner-preview > img { display: none !important; }
+#html5-qrcode-anchor-scan-type-change { display: none !important; }
+#html5-qrcode-button-camera-permission { 
+    background: var(--primary) !important;
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 10px 20px !important;
+    color: white !important;
+    font-family: var(--font) !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    margin: 20px auto !important;
+    display: block !important;
+}
+
+/* Scanner Result */
+.scanner-result {
+    background: var(--green-light);
+    border: 1px solid #bbf7d0;
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 16px;
+    animation: slideUp 0.3s ease;
+}
+
+.result-icon { font-size: 24px; color: var(--green); flex-shrink: 0; }
+
+.result-info { flex: 1; }
+.result-info p  { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+.result-info span { font-size: 12px; color: var(--text-muted); }
+
+/* Manual Entry Row */
+.scanner-manual {
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
+    margin-top: 4px;
+}
+
+.scanner-manual span {
+    font-size: 12.5px;
+    color: var(--text-muted);
+    font-weight: 500;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.manual-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.manual-row .search-input { flex: 1; min-width: 0; }
+
 @media (max-width: 480px) {
     .form-row { grid-template-columns: 1fr; }
     .modal-box { border-radius: 16px; }
+    .content-area { padding: 16px; }
+    .summary-cards { grid-template-columns: 1fr 1fr; }
 }
+
 

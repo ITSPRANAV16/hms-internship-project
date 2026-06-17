@@ -303,6 +303,109 @@ renderStock(stockData);
 renderStaff(staffData);
 renderOverviewAlerts();
 
+// ---- BARCODE SCANNER ----
+
+// Demo medicine barcode database (Indian medicine barcodes)
+const medicineBarcodeDB = {
+    "8901030827737": { name: "Crocin 500mg",          category: "Medicines",   unit: "Tablets" },
+    "8906017060018": { name: "Dolo 650mg",             category: "Medicines",   unit: "Tablets" },
+    "8904112800126": { name: "Azithromycin 500mg",     category: "Medicines",   unit: "Tablets" },
+    "8901234567890": { name: "Amoxicillin 250mg",      category: "Medicines",   unit: "Capsules" },
+    "8906001234567": { name: "Pantoprazole 40mg",      category: "Medicines",   unit: "Tablets" },
+    "8901030856737": { name: "Disprin 350mg",          category: "Medicines",   unit: "Tablets" },
+    "8906022001122": { name: "Surgical Gloves (M)",    category: "Consumables", unit: "Pairs" },
+    "4006381333931": { name: "IV Drip Set",            category: "Consumables", unit: "Pcs" },
+    "8901764000127": { name: "Syringes 5ml",           category: "Consumables", unit: "Pcs" },
+    "8901030867891": { name: "Saline Solution 500ml",  category: "Medicines",   unit: "Bottles" },
+};
+
+let html5QrCode = null;
+let lastScannedData = null;
+
+function openScannerModal() {
+    openModal('modal-scanner');
+    document.getElementById('scanner-result').style.display = 'none';
+    document.getElementById('manual-barcode').value = '';
+
+    setTimeout(() => {
+        html5QrCode = new Html5Qrcode("scanner-preview");
+        html5QrCode.start(
+            { facingMode: "environment" },
+            { fps: 10, qrbox: { width: 250, height: 120 } },
+            (decodedText) => {
+                lookupBarcode(decodedText);
+                // Stop scanning after first successful scan
+                if (html5QrCode && html5QrCode.isScanning) {
+                    html5QrCode.stop().catch(() => {});
+                }
+            },
+            () => {} // Ignore scan errors
+        ).catch((err) => {
+            console.warn("Camera error:", err);
+            document.getElementById('scanner-preview').innerHTML =
+                `<div style="text-align:center;padding:30px;color:#94a3b8;">
+                    <i class="fa-solid fa-camera-slash" style="font-size:36px;margin-bottom:10px;"></i>
+                    <p>Camera access failed.</p>
+                    <p style="font-size:12px;">Please use manual barcode entry below.</p>
+                </div>`;
+        });
+    }, 300);
+}
+
+function stopScanner() {
+    if (html5QrCode && html5QrCode.isScanning) {
+        html5QrCode.stop().catch(() => {});
+    }
+    html5QrCode = null;
+    closeModal('modal-scanner');
+}
+
+function lookupBarcode(barcode) {
+    if (!barcode || barcode.trim() === '') {
+        showToastError('Barcode empty आहे!');
+        return;
+    }
+    barcode = barcode.trim();
+    const found = medicineBarcodeDB[barcode];
+    lastScannedData = found
+        ? { ...found, barcode }
+        : { name: `Item (${barcode})`, category: "Medicines", unit: "Pcs", barcode };
+
+    document.getElementById('result-name').textContent    = lastScannedData.name;
+    document.getElementById('result-barcode').textContent = `Barcode: ${barcode}`;
+    document.getElementById('scanner-result').style.display = 'flex';
+
+    if (!found) {
+        document.getElementById('result-icon').innerHTML = '<i class="fa-solid fa-circle-question" style="color:#ea580c"></i>';
+    }
+}
+
+function useScannedResult() {
+    if (!lastScannedData) return;
+    // Pre-fill the stock add form
+    document.getElementById('s-name').value     = lastScannedData.name;
+    document.getElementById('s-category').value = lastScannedData.category;
+    document.getElementById('s-unit').value      = lastScannedData.unit;
+    stopScanner();
+    openModal('modal-stock');
+    showToast(`"${lastScannedData.name}" form मध्ये भरले!`);
+}
+
+function showToastError(msg) {
+    const toast = document.getElementById('toast');
+    toast.style.background = 'linear-gradient(135deg,#dc2626,#b91c1c)';
+    document.getElementById('toast-msg').textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => {
+        toast.classList.remove('show');
+        toast.style.background = '';
+    }, 3000);
+}
+
+// Override openModal to handle scanner
+const _origOpen = openModal;
+
+
 // ---- MODAL HELPERS ----
 
 function openModal(id) {
