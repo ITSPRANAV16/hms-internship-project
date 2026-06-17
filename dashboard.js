@@ -320,6 +320,7 @@ const medicineBarcodeDB = {
 };
 
 let html5QrCode = null;
+let html5QrCodeLive = null;
 let lastScannedData = null;
 
 function openScannerModal() {
@@ -327,11 +328,61 @@ function openScannerModal() {
     document.getElementById('scanner-result').style.display  = 'none';
     document.getElementById('scanner-processing').style.display = 'none';
     document.getElementById('manual-barcode').value = '';
-    // Initialize html5QrCode instance once
-    if (!html5QrCode) {
-        html5QrCode = new Html5Qrcode("qr-hidden-canvas");
-    }
+    document.getElementById('scanner-preview').innerHTML = '';
+    document.getElementById('btn-start-cam').style.display = 'flex';
+    document.getElementById('btn-stop-cam').style.display  = 'none';
+    if (!html5QrCode) html5QrCode = new Html5Qrcode("qr-hidden-canvas");
 }
+
+function startLiveCamera() {
+    document.getElementById('btn-start-cam').style.display = 'none';
+    document.getElementById('btn-stop-cam').style.display  = 'block';
+    document.getElementById('scanner-preview').innerHTML   = '';
+
+    html5QrCodeLive = new Html5Qrcode("scanner-preview");
+    html5QrCodeLive.start(
+        { facingMode: "environment" },
+        {
+            fps: 15,
+            qrbox: { width: 280, height: 100 },
+            formatsToSupport: [
+                Html5QrcodeSupportedFormats.EAN_13,
+                Html5QrcodeSupportedFormats.EAN_8,
+                Html5QrcodeSupportedFormats.CODE_128,
+                Html5QrcodeSupportedFormats.CODE_39,
+                Html5QrcodeSupportedFormats.UPC_A,
+                Html5QrcodeSupportedFormats.UPC_E,
+                Html5QrcodeSupportedFormats.QR_CODE,
+            ],
+            experimentalFeatures: { useBarCodeDetectorIfSupported: true },
+        },
+        (decodedText) => {
+            stopLiveCamera();
+            lookupBarcode(decodedText);
+        },
+        () => {}
+    ).catch(() => {
+        document.getElementById('scanner-preview').innerHTML =
+            `<div style="text-align:center;padding:24px;color:#94a3b8;">
+                <i class="fa-solid fa-lock" style="font-size:32px;margin-bottom:8px;display:block;color:#ef4444;"></i>
+                <p style="font-weight:700;color:#475569;font-size:14px;">Live camera साठी localhost लागतो</p>
+                <p style="font-size:12px;margin-top:6px;">📁 HMS folder मधील <strong>start-server.bat</strong> double-click करा<br>
+                मग browser मध्ये <strong>http://localhost:8000/dashboard.html</strong> उघडा</p>
+            </div>`;
+        document.getElementById('btn-start-cam').style.display = 'flex';
+        document.getElementById('btn-stop-cam').style.display  = 'none';
+    });
+}
+
+function stopLiveCamera() {
+    if (html5QrCodeLive && html5QrCodeLive.isScanning) {
+        html5QrCodeLive.stop().catch(() => {});
+    }
+    html5QrCodeLive = null;
+    document.getElementById('btn-start-cam').style.display = 'flex';
+    document.getElementById('btn-stop-cam').style.display  = 'none';
+}
+
 
 // Handle camera capture input
 document.addEventListener('DOMContentLoaded', () => {

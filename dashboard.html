@@ -621,37 +621,44 @@
             </div>
             <div class="scanner-body">
 
-                <!-- Method 1: Camera Photo -->
+                <!-- Live Camera Scanner -->
                 <div class="scan-method">
-                    <p class="scan-method-label"><i class="fa-solid fa-camera"></i> Method 1 — Camera ने Photo काढा</p>
-                    <label class="camera-capture-btn" for="camera-input">
-                        <i class="fa-solid fa-camera"></i>
-                        <span>Camera Open करा</span>
-                        <small>Tablet box चा barcode photo काढा</small>
-                    </label>
-                    <input type="file" id="camera-input" accept="image/*" capture="environment" style="display:none;">
+                    <p class="scan-method-label"><i class="fa-solid fa-camera"></i> Live Camera Scan (localhost वर काम करतो)</p>
+                    <div id="scanner-preview"></div>
+                    <button class="btn-scan" id="btn-start-cam" onclick="startLiveCamera()" style="width:100%;justify-content:center;margin-top:8px;">
+                        <i class="fa-solid fa-video"></i> Live Camera सुरू करा
+                    </button>
+                    <button class="btn-cancel" id="btn-stop-cam" onclick="stopLiveCamera()" style="width:100%;justify-content:center;margin-top:6px;display:none;">
+                        <i class="fa-solid fa-stop"></i> Camera बंद करा
+                    </button>
                 </div>
 
                 <!-- OR -->
                 <div class="scan-or"><span>किंवा</span></div>
 
-                <!-- Method 2: Upload Image -->
+                <!-- Photo Capture -->
                 <div class="scan-method">
-                    <p class="scan-method-label"><i class="fa-solid fa-image"></i> Method 2 — Barcode चा Photo Upload करा</p>
-                    <label class="camera-capture-btn upload-btn" for="image-upload-input">
-                        <i class="fa-solid fa-upload"></i>
-                        <span>Image Upload करा</span>
-                        <small>Gallery मधून barcode photo select करा</small>
-                    </label>
+                    <p class="scan-method-label"><i class="fa-solid fa-image"></i> Photo काढून / Upload करून Scan करा</p>
+                    <div style="display:flex;gap:10px;">
+                        <label class="camera-capture-btn" for="camera-input" style="flex:1;padding:14px 10px;">
+                            <i class="fa-solid fa-camera"></i>
+                            <span style="font-size:13px;">Camera Photo</span>
+                        </label>
+                        <label class="camera-capture-btn upload-btn" for="image-upload-input" style="flex:1;padding:14px 10px;">
+                            <i class="fa-solid fa-upload"></i>
+                            <span style="font-size:13px;">Gallery Upload</span>
+                        </label>
+                    </div>
+                    <input type="file" id="camera-input" accept="image/*" capture="environment" style="display:none;">
                     <input type="file" id="image-upload-input" accept="image/*" style="display:none;">
                 </div>
 
                 <!-- OR -->
                 <div class="scan-or"><span>किंवा</span></div>
 
-                <!-- Method 3: Manual -->
+                <!-- Manual -->
                 <div class="scan-method">
-                    <p class="scan-method-label"><i class="fa-solid fa-keyboard"></i> Method 3 — Manually Barcode Type करा</p>
+                    <p class="scan-method-label"><i class="fa-solid fa-keyboard"></i> Manual Barcode Entry</p>
                     <div class="manual-row">
                         <input type="text" id="manual-barcode" placeholder="13 digit barcode number..." class="search-input">
                         <button class="btn-add" onclick="lookupBarcode(document.getElementById('manual-barcode').value)">
