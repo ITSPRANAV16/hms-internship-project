@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Chaitanya Multi Speciality Hospital</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <i class="fa-solid fa-hospital"></i>
+                <div>
+                    <span class="logo-title">Chaitanya</span>
+                    <span class="logo-subtitle">Hospital Admin</span>
+                </div>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <p class="nav-label">Main Menu</p>
+            <ul>
+                <li>
+                    <a href="#" class="nav-item active" data-tab="overview">
+                        <i class="fa-solid fa-chart-pie"></i>
+                        <span>Overview</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-item" data-tab="patients">
+                        <i class="fa-solid fa-bed-pulse"></i>
+                        <span>Patient & Bed Mgmt</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-item" data-tab="waste">
+                        <i class="fa-solid fa-trash-can"></i>
+                        <span>Waste Management</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-item" data-tab="stock">
+                        <i class="fa-solid fa-boxes-stacked"></i>
+                        <span>Stock Management</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-item" data-tab="staff">
+                        <i class="fa-solid fa-user-nurse"></i>
+                        <span>Staff Info</span>
+                    </a>
+                </li>
+            </ul>
+
+            <p class="nav-label" style="margin-top:20px;">General</p>
+            <ul>
+                <li>
+                    <a href="index.html" class="nav-item">
+                        <i class="fa-solid fa-globe"></i>
+                        <span>Back to Website</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- Topbar -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="menu-toggle-btn" id="menuToggleBtn">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <h1 class="page-title" id="pageTitle">Overview</h1>
+            </div>
+            <div class="topbar-right">
+                <div class="notification-bell">
+                    <i class="fa-solid fa-bell"></i>
+                    <span class="badge" id="alertBadge">3</span>
+                </div>
+                <div class="admin-profile">
+                    <div class="admin-avatar"><i class="fa-solid fa-user-shield"></i></div>
+                    <div>
+                        <span class="admin-name">Admin</span>
+                        <span class="admin-role">Hospital Manager</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Tab Panels -->
+        <div class="content-area">
+
+            <!-- ===== OVERVIEW TAB ===== -->
+            <div class="tab-panel active" id="tab-overview">
+                <div class="summary-cards">
+                    <div class="summary-card blue">
+                        <div class="card-icon"><i class="fa-solid fa-bed-pulse"></i></div>
+                        <div class="card-info">
+                            <h3>48</h3>
+                            <p>Total Beds</p>
+                        </div>
+                    </div>
+                    <div class="summary-card green">
+                        <div class="card-icon"><i class="fa-solid fa-circle-check"></i></div>
+                        <div class="card-info">
+                            <h3>14</h3>
+                            <p>Available Beds</p>
+                        </div>
+                    </div>
+                    <div class="summary-card orange">
+                        <div class="card-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                        <div class="card-info">
+                            <h3 id="overview-stock-alerts">3</h3>
+                            <p>Stock Alerts</p>
+                        </div>
+                    </div>
+                    <div class="summary-card purple">
+                        <div class="card-icon"><i class="fa-solid fa-users"></i></div>
+                        <div class="card-info">
+                            <h3>52</h3>
+                            <p>Total Staff</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="overview-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i class="fa-solid fa-triangle-exclamation"></i> Urgent Stock Alerts</h2>
+                        </div>
+                        <div id="overview-alerts-list"></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i class="fa-solid fa-trash-can"></i> Today's Waste Summary</h2>
+                        </div>
+                        <div class="waste-summary-list">
+                            <div class="waste-bar-item">
+                                <span>Biomedical Waste</span>
+                                <div class="bar-wrap"><div class="bar" style="width:65%; background:#ef4444;"></div></div>
+                                <span>32.5 kg</span>
+                            </div>
+                            <div class="waste-bar-item">
+                                <span>Sharps Waste</span>
+                                <div class="bar-wrap"><div class="bar" style="width:20%; background:#f97316;"></div></div>
+                                <span>10 kg</span>
+                            </div>
+                            <div class="waste-bar-item">
+                                <span>General Waste</span>
+                                <div class="bar-wrap"><div class="bar" style="width:90%; background:#64748b;"></div></div>
+                                <span>45 kg</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== PATIENT & BED MANAGEMENT TAB ===== -->
+            <div class="tab-panel" id="tab-patients">
+                <div class="summary-cards">
+                    <div class="summary-card blue">
+                        <div class="card-icon"><i class="fa-solid fa-bed-pulse"></i></div>
+                        <div class="card-info"><h3>48</h3><p>Total Beds</p></div>
+                    </div>
+                    <div class="summary-card red">
+                        <div class="card-icon"><i class="fa-solid fa-bed"></i></div>
+                        <div class="card-info"><h3>34</h3><p>Occupied Beds</p></div>
+                    </div>
+                    <div class="summary-card green">
+                        <div class="card-icon"><i class="fa-solid fa-circle-check"></i></div>
+                        <div class="card-info"><h3>14</h3><p>Available Beds</p></div>
+                    </div>
+                    <div class="summary-card orange">
+                        <div class="card-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
+                        <div class="card-info"><h3>5</h3><p>Discharges Today</p></div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-bed-pulse"></i> Patient & Bed Status</h2>
+                        <div class="filter-group">
+                            <input type="text" id="patient-search" class="search-input" placeholder="Search patient or bed...">
+                            <select class="filter-select" id="ward-filter">
+                                <option value="all">All Wards</option>
+                                <option value="General">General</option>
+                                <option value="ICU">ICU</option>
+                                <option value="Pediatric">Pediatric</option>
+                                <option value="Maternity">Maternity</option>
+                                <option value="Orthopedic">Orthopedic</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="table-wrapper">
+                        <table class="data-table" id="patients-table">
+                            <thead>
+                                <tr>
+                                    <th>Patient Name</th>
+                                    <th>Age</th>
+                                    <th>Ward</th>
+                                    <th>Bed No.</th>
+                                    <th>Admission Date</th>
+                                    <th>Doctor</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="patients-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== WASTE MANAGEMENT TAB ===== -->
+            <div class="tab-panel" id="tab-waste">
+                <div class="summary-cards">
+                    <div class="summary-card red">
+                        <div class="card-icon"><i class="fa-solid fa-biohazard"></i></div>
+                        <div class="card-info"><h3>32.5 kg</h3><p>Biomedical Today</p></div>
+                    </div>
+                    <div class="summary-card orange">
+                        <div class="card-icon"><i class="fa-solid fa-syringe"></i></div>
+                        <div class="card-info"><h3>10 kg</h3><p>Sharps Today</p></div>
+                    </div>
+                    <div class="summary-card blue">
+                        <div class="card-icon"><i class="fa-solid fa-recycle"></i></div>
+                        <div class="card-info"><h3>45 kg</h3><p>General Today</p></div>
+                    </div>
+                    <div class="summary-card green">
+                        <div class="card-icon"><i class="fa-solid fa-circle-check"></i></div>
+                        <div class="card-info"><h3>87.5 kg</h3><p>Total Today</p></div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-trash-can"></i> Waste Log</h2>
+                        <div class="filter-group">
+                            <select class="filter-select" id="waste-filter">
+                                <option value="all">All Types</option>
+                                <option value="Biomedical">Biomedical</option>
+                                <option value="Sharps">Sharps</option>
+                                <option value="General">General</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="table-wrapper">
+                        <table class="data-table" id="waste-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Waste Type</th>
+                                    <th>Department</th>
+                                    <th>Weight (kg)</th>
+                                    <th>Disposal Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="waste-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== STOCK MANAGEMENT TAB ===== -->
+            <div class="tab-panel" id="tab-stock">
+                <div class="summary-cards">
+                    <div class="summary-card blue">
+                        <div class="card-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
+                        <div class="card-info"><h3 id="total-items-count">0</h3><p>Total Items</p></div>
+                    </div>
+                    <div class="summary-card red">
+                        <div class="card-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                        <div class="card-info"><h3 id="low-stock-count">0</h3><p>Low Stock Alerts</p></div>
+                    </div>
+                    <div class="summary-card green">
+                        <div class="card-icon"><i class="fa-solid fa-circle-check"></i></div>
+                        <div class="card-info"><h3 id="ok-stock-count">0</h3><p>Items OK</p></div>
+                    </div>
+                    <div class="summary-card orange">
+                        <div class="card-icon"><i class="fa-solid fa-clock"></i></div>
+                        <div class="card-info"><h3>2</h3><p>Pending Orders</p></div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-boxes-stacked"></i> Inventory Register</h2>
+                        <div class="filter-group">
+                            <input type="text" id="stock-search" class="search-input" placeholder="Search item...">
+                            <select class="filter-select" id="stock-filter">
+                                <option value="all">All Categories</option>
+                                <option value="Medicines">Medicines</option>
+                                <option value="Equipment">Equipment</option>
+                                <option value="Consumables">Consumables</option>
+                                <option value="Lab Supplies">Lab Supplies</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="table-wrapper">
+                        <table class="data-table" id="stock-table">
+                            <thead>
+                                <tr>
+                                    <th>Item Name</th>
+                                    <th>Category</th>
+                                    <th>Current Qty</th>
+                                    <th>Min. Threshold</th>
+                                    <th>Unit</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="stock-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== STAFF INFO TAB ===== -->
+            <div class="tab-panel" id="tab-staff">
+                <div class="summary-cards">
+                    <div class="summary-card blue">
+                        <div class="card-icon"><i class="fa-solid fa-user-doctor"></i></div>
+                        <div class="card-info"><h3>18</h3><p>Doctors</p></div>
+                    </div>
+                    <div class="summary-card green">
+                        <div class="card-icon"><i class="fa-solid fa-user-nurse"></i></div>
+                        <div class="card-info"><h3>24</h3><p>Nurses</p></div>
+                    </div>
+                    <div class="summary-card purple">
+                        <div class="card-icon"><i class="fa-solid fa-flask"></i></div>
+                        <div class="card-info"><h3>6</h3><p>Lab Technicians</p></div>
+                    </div>
+                    <div class="summary-card orange">
+                        <div class="card-icon"><i class="fa-solid fa-broom"></i></div>
+                        <div class="card-info"><h3>14</h3><p>Support Staff</p></div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-users"></i> Staff Directory</h2>
+                        <div class="filter-group">
+                            <input type="text" id="staff-search" class="search-input" placeholder="Search staff name...">
+                            <select class="filter-select" id="staff-filter">
+                                <option value="all">All Roles</option>
+                                <option value="Doctor">Doctor</option>
+                                <option value="Nurse">Nurse</option>
+                                <option value="Lab Technician">Lab Technician</option>
+                                <option value="Support Staff">Support Staff</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="table-wrapper">
+                        <table class="data-table" id="staff-table">
+                            <thead>
+                                <tr>
+                                    <th>Staff Name</th>
+                                    <th>Role</th>
+                                    <th>Department</th>
+                                    <th>Shift</th>
+                                    <th>Contact</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="staff-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- end content-area -->
+    </main>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>
